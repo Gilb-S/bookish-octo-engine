@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
     }, 
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        refer: "category"
+        refer: "Category"
     },
     description: {
         type: String
@@ -16,7 +16,7 @@ const postSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        refers: "users"
+        refers: "User"
     }
 
 },

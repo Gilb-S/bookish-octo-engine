@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv'
 import { connectDB } from '../config/db.js';
-import blogRoutes from '../routes/user.route.js';
-import userRoutes from '../routes/blog.route.js';
+import blogRoutes from "../routes/blog.route.js"
+import userRoutesr from '../routes/user.route.js'
 
 dotenv.config()
 const port = process.env.PORT
@@ -14,8 +14,8 @@ const app = express();
 app.use(express.json());
 
 //routes
-app.use("/api/user", blogRoutes)
-app.use("/api/blog", userRoutes)
+app.use("/api/blog", blogRoutes)
+app.use("/api/user", userRoutesr)
 
 
 
