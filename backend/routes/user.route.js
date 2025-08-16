@@ -4,6 +4,6 @@ import { allUser, userLogin, userRegister } from '../controllers/user.controller
 const router = express.Router()
 router.get("/all", allUser)
 router.post("/register", userRegister)
-router.post("/", userLogin)
+router.post("/login", userLogin)
 
 export default router
