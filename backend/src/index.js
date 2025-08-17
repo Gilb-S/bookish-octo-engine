@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { connectDB } from '../config/db.js';
 import blogRoutes from "../routes/blog.route.js"
 import userRoutesr from '../routes/user.route.js'
+import blogCategory from '../routes/category.route.js'
 
 dotenv.config()
 const port = process.env.PORT
@@ -16,6 +17,7 @@ app.use(express.json());
 //routes
 app.use("/api/blog", blogRoutes)
 app.use("/api/user", userRoutesr)
+app.use("/api/category", blogCategory)
 
 
 
