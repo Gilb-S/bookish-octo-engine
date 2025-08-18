@@ -23,14 +23,14 @@ export const addNewBlog = async (req, res) => {
             title: title,
             category: category,
             description: description,
-            thumbnail: req.file.filename,
-            user: req.user._id
+            thumbnail: req.file.filename ,
+            user: req.user._id,
         })
 
         const savedBlog = await addBlog.save()
 
         if(savedBlog){
-            return res.status(201).json({message: "Blog Added successfully"})
+            return res.status(201).json({message: "Blog Added successfully",  blog: savedBlog,})
         }
     } catch (error) {
         return res.status(500).json({message: error.message})

@@ -20,7 +20,7 @@ const router = express.Router();
 // protected routes
 
 router.get("/all", checkIsUserAuthenticated, getAllBlog)
-router.post("/add", upload.single("thumbnail"), checkIsUserAuthenticated,addNewBlog)
+router.post("/add", checkIsUserAuthenticated, upload.single("thumbnail"),addNewBlog)
 router.get("/:id",checkIsUserAuthenticated, singleBlog)
 
 
