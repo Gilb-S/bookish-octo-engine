@@ -22,11 +22,12 @@ export const addCategory = async (req, res) => {
             title,
         })
 
-        const savedCategory = await newCategory.save();
+        
         const existing = await category.findOne({ title });
         if (existing) {
           return res.status(409).json({ message: "Category already exists" });
         }    
+        const savedCategory = await newCategory.save();
 
         return res.status(201).json({
             message: "Category added successfully",
