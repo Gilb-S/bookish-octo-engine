@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -11,16 +13,22 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 👉 Send data to your backend API here
 
-    // try {
-    //   await axios.post("")  
-    // } catch (error) {
-    //     alert(error.response)
-    // }
-    //console.log("Form submitted:", formData);
+    try {
+      const res = await axios.post(
+        "http://localhost:5001/api/user/register",
+        formData,
+        { withCredentials: true }
+      );
+      alert(res.data.message);
+      navigate("/login")
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+    // console.log("Form submitted:", formData);
   };
 
   return (

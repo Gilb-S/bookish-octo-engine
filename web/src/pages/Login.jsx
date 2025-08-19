@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-
+import axios from "axios";
+import { useNavigate } from "react-router";
 const Login = () => {
+
+  const navigate = useNavigate();  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -10,10 +13,25 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 👉 Send data to your backend API here
-    console.log("Login submitted:", formData);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5001/api/user/login",
+        formData,
+        { withCredentials: true }
+      );
+      alert(res.data.message);
+      console.log(res.data);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", res.data.name);
+      navigate("/")
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+    
   };
 
   return (
@@ -65,7 +83,10 @@ const Login = () => {
 
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-4 text-center">
           Don’t have an account?{" "}
-          <a href="/register" className="text-blue-600 dark:text-blue-400 hover:underline">
+          <a
+            href="/register"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
             Sign up
           </a>
         </p>
