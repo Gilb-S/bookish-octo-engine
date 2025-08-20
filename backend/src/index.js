@@ -11,7 +11,7 @@ const port = process.env.PORT
 
 
 const app = express();
-
+app.use("/uploads", express.static("public/upload"))
 //middleware
 app.use(express.json());
 app.use(cors({

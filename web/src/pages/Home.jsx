@@ -1,82 +1,112 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
-  const blogs = [
-    {
-      id: 1,
-      title: "Getting Started with React & Tailwind",
-      description:
-        "Learn how to quickly set up a modern React app styled with Tailwind CSS.",
-      author: "John Doe",
-      date: "Aug 18, 2025",
-      image: "https://source.unsplash.com/600x400/?code,programming",
-      content:
-        "Full blog post about React & Tailwind setup... (you can replace this with API content).",
-    },
-    {
-      id: 2,
-      title: "Why You Should Learn MERN Stack",
-      description:
-        "The MERN stack is powerful for full-stack development. Here’s why you should start learning it.",
-      author: "Jane Smith",
-      date: "Aug 15, 2025",
-      image: "https://source.unsplash.com/600x400/?technology,laptop",
-      content:
-        "Longer version of the MERN stack article goes here...",
-    },
-  ];
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAllBlogs = async () => {
+      try {
+        const token = localStorage.getItem("token"); // get JWT from localStorage
+        if (!token) {
+          setError("No token found. Please login first.");
+          setLoading(false);
+          return;
+        }
+
+        const res = await axios.get("http://localhost:5001/api/blog/all", {
+          headers: {
+            "Authorization": `Bearer ${token}`, // send token
+          },
+          withCredentials: true,
+        });
+
+        setBlogs(res.data);
+      } catch (err) {
+        setError(err.response?.data?.message || "Error fetching blogs");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllBlogs();
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-10">
         {/* Hero Section */}
         <section className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 dark:text-gray-100 mb-4">
-            Welcome to Blog-octo-express
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-gray-100 mb-4">
+            Welcome to Blog-octo-express 🚀
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
             Discover stories, tutorials, and thoughts from developers.
           </p>
         </section>
 
-        {/* Blog List */}
-        <section className="grid md:grid-cols-2 gap-8">
-          {blogs.map((blog) => (
-            <div
-              key={blog.id}
-              className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition"
-            >
-              <img
-                src={blog.image}
-                alt={blog.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                  {blog.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {blog.description}
-                </p>
-                <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
-                  <span>{blog.author}</span>
-                  <span>{blog.date}</span>
-                </div>
+        {/* States */}
+        {loading ? (
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            Loading blogs...
+          </p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : blogs.length === 0 ? (
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            No blogs available yet. Be the first to share your story!
+          </p>
+        ) : (
+          <section className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogs.map((blog) => (
+              <div
+                key={blog._id}
+                className="bg-white dark:bg-gray-800 shadow-md rounded-2xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition transform"
+              >
+                {/* Blog Thumbnail */}
+                <img
+                  src={
+                    blog.thumbnail
+                      ? `http://localhost:5001/uploads/${blog.thumbnail}`
+                      : "https://source.unsplash.com/600x400/?blog,writing"
+                  }
+                  alt={blog.title}
+                  className="w-full h-48 object-cover"
+                />
 
-                {/* Read More Button */}
-                <div className="mt-4">
-                  <Link
-                    to={`/blog/${blog.id}`}
-                    className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
-                  >
-                    Read More →
-                  </Link>
+                {/* Blog Content */}
+                <div className="p-5 flex flex-col h-full">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                    {blog.title}
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
+                    {blog.description}
+                  </p>
+
+                  {/* Metadata (only date) */}
+                  <div className="flex items-center justify-between mt-4 text-xs text-gray-500 dark:text-gray-400">
+                    <span>
+                      📅 {new Date(blog.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  {/* Read More */}
+                  <div className="mt-4">
+                    <Link
+                      to={`/blog/${blog._id}`}
+                      className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+                    >
+                      Read More →
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </section>
+            ))}
+          </section>
+        )}
       </div>
     </main>
   );

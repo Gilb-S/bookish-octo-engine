@@ -93,7 +93,7 @@ const Header = () => {
                         localStorage.removeItem("token");
                         localStorage.removeItem("username");
                         alert("user log-out success");
-                        window.location.href = "/login"; // redirect
+                        window.location.href = "/"; // redirect
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >

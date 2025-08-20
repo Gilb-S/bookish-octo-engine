@@ -3,7 +3,7 @@ import {Post} from '../model/post.model.js'
 export const getAllBlog = async (req, res) =>  {
 
     try {
-        const fetchAllBlog = await Post.find({user: req.user._id})
+        const fetchAllBlog = await Post.find({user: req.user._id}).sort({"createdAt": -1})
         return res.status(200).json(fetchAllBlog)
         
     } catch (error) {

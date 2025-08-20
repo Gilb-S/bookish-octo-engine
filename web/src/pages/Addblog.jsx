@@ -1,20 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
-const AddPost = () => {
+import axios from "axios";
+import { useNavigate } from "react-router";
+const Addblog = () => {
+  const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
+  const [input, setInput] = useState({
+    title: "",
+    description: "",
+    category: "",
+  });
+  const [file, setFile] = useState(null);
+  const [categories, setCategories] = useState([]);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
-  };
+  // Fetch categories
+  useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        const res = await axios.get("http://localhost:5001/api/category/all", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setCategories(res.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchAll();
+  }, []);
 
-  const handleSubmit = (e) => {
+  // Handle image preview
+  useEffect(() => {
+    if (!file) return;
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [file]);
+
+  // Submit form
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // here you’ll handle sending formData to your backend
-    console.log("Form submitted");
+
+    const formData = new FormData();
+    formData.append("title", input.title);
+    formData.append("description", input.description);
+    formData.append("category", input.category);
+    formData.append("thumbnail", file);
+
+    try {
+      const res = await axios.post("http://localhost:5001/api/blog/add", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert(res.data.message)
+      navigate("/")
+      console.log("Blog created:", res.data);
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   return (
@@ -38,6 +84,10 @@ const AddPost = () => {
             <input
               type="text"
               name="title"
+              value={input.title}
+              onChange={(e) =>
+                setInput({ ...input, [e.target.name]: e.target.value })
+              }
               placeholder="Enter blog title"
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -51,11 +101,20 @@ const AddPost = () => {
             </label>
             <select
               name="category"
+              value={input.category}
+              onChange={(e) =>
+                setInput({ ...input, [e.target.name]: e.target.value })
+              }
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option disabled>Select category</option>
-             
+              <option value="">Select category</option>
+              {categories &&
+                categories.map((item) => (
+                  <option key={item._id} value={item._id}>
+                    {item.title}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -66,6 +125,10 @@ const AddPost = () => {
             </label>
             <textarea
               name="description"
+              value={input.description}
+              onChange={(e) =>
+                setInput({ ...input, [e.target.name]: e.target.value })
+              }
               rows="6"
               placeholder="Write your blog here..."
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -82,7 +145,7 @@ const AddPost = () => {
               type="file"
               name="thumbnail"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={(e) => setFile(e.target.files[0])}
               className="block w-full text-sm text-gray-500 
                 file:mr-4 file:py-2 file:px-4 
                 file:rounded-lg file:border-0 
@@ -113,4 +176,4 @@ const AddPost = () => {
   );
 };
 
-export default AddPost;
+export default Addblog;

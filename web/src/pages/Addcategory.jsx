@@ -1,13 +1,33 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-
+import axios from "axios";
+import { useNavigate } from "react-router";
 const AddCategory = () => {
-  const [title, setTitle] = useState("");
+  const navigate = useNavigate();
+  const [input, setInput] = useState({
+    title: "",
+  });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 👉 Send `title` to your backend API here
-    console.log("Category submitted:", title);
+    //console.log("Category submitted:", title);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5001/api/category/add-category",
+        input,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      alert(res.data.message);
+      navigate("/");
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   return (
@@ -31,8 +51,10 @@ const AddCategory = () => {
             <input
               type="text"
               name="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={input.title}
+              onChange={(e) =>
+                setInput({ ...input, [e.target.name]: e.target.value })
+              }
               placeholder="Enter category title"
               required
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
