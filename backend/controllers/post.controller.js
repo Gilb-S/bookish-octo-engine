@@ -12,6 +12,7 @@ export const getAllBlog = async (req, res) =>  {
 }
 
 
+
 export const addNewBlog = async (req, res) => {
     const {title, category, description} = req.body;
     try {
