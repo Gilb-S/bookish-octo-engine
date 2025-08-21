@@ -7,21 +7,25 @@ import Header from "./components/Header";
 import Addblog from "./pages/Addblog";
 import Addcategory from "./pages/Addcategory";
 import Detailblog from "./pages/Detailblog";
-import { PrivateRoute} from './services/ProtectedRoutes'
+import { PrivateRoute } from "./services/ProtectedRoutes";
+import PublicBlog from "./pages/PublicBlog";
+
 const App = () => {
   return (
     <>
       <Header />
       <Routes>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/register" element={<Signup />}></Route>
-    
-        {/* protected route */}
-        <Route path="/" element={<PrivateRoute />}>
-        <Route path="/" element={<Home />}></Route>
-          <Route path="/add-blog" element={<Addblog />}></Route>
-          <Route path="/add-category" element={<Addcategory />}></Route>
-          <Route path="/blog/:id" element={<Detailblog />}></Route>
+        {/* public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Signup />} />
+        <Route path="/" element={<PublicBlog />} />
+
+        {/* protected routes */}
+        <Route path="/home" element={<PrivateRoute />}>
+          <Route index element={<Home />} />
+          <Route path="add-blog" element={<Addblog />} />
+          <Route path="add-category" element={<Addcategory />} />
+          <Route path="blog/:id" element={<Detailblog />} />
         </Route>
       </Routes>
     </>

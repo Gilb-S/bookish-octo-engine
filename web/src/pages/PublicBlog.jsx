@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 
-const Home = () => {
+const PublicBlog = () => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
 
@@ -11,12 +11,8 @@ const Home = () => {
     const fetchBlogs = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5001/api/blog/all", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const res = await axios.get("http://localhost:5001/api/blog/public"
+        );
         setBlogs(res.data);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
@@ -38,7 +34,7 @@ const Home = () => {
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-          User Latest Blogs
+          Latest Public Blogs
         </h1>
 
         {blogs.length === 0 ? (
@@ -107,4 +103,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default PublicBlog;

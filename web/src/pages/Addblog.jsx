@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import toast from 'react-hot-toast'
 const Addblog = () => {
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
@@ -55,11 +56,11 @@ const Addblog = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert(res.data.message)
-      navigate("/")
+      toast.success(res.data.message)
+      navigate("/home")
       console.log("Blog created:", res.data);
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -90,7 +91,7 @@ const Addblog = () => {
               }
               placeholder="Enter blog title"
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              
             />
           </div>
 
@@ -106,7 +107,7 @@ const Addblog = () => {
                 setInput({ ...input, [e.target.name]: e.target.value })
               }
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+             
             >
               <option value="">Select category</option>
               {categories &&
@@ -132,7 +133,7 @@ const Addblog = () => {
               rows="6"
               placeholder="Write your blog here..."
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+             
             ></textarea>
           </div>
 
@@ -152,7 +153,7 @@ const Addblog = () => {
                 file:text-sm file:font-semibold 
                 file:bg-blue-50 file:text-blue-600 
                 hover:file:bg-blue-100"
-              required
+          
             />
             {preview && (
               <img

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import toast from 'react-hot-toast'
 import { useNavigate } from "react-router";
 const Login = () => {
-
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -23,15 +23,15 @@ const Login = () => {
         formData,
         { withCredentials: true }
       );
-      alert(res.data.message);
+      // alert(res.data.message);
+      toast.success(res.data.message);
       console.log(res.data);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", res.data.name);
-      navigate("/")
+      navigate("/home");
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     }
-    
   };
 
   return (

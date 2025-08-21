@@ -1,5 +1,19 @@
 import {Post} from '../model/post.model.js'
 
+
+// public blog
+
+export const publicBlogs = async (req, res) => {
+    try {
+        const fetchPublicBlogs = await Post.find({}).sort({"createdAt": -1})
+        return res.status(200).json(fetchPublicBlogs)
+    } catch (error) {
+        return res.status(500).json({message: erro.message})
+    }
+}
+
+
+
 export const getAllBlog = async (req, res) =>  {
 
     try {

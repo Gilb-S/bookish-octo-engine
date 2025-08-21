@@ -9,3 +9,7 @@ Use proper status codes:
 409 → conflict (duplicate resource)
 
 500 → server error
+
+
+--plan feature add toast for success and error 
+--add public post that dont have request token auth

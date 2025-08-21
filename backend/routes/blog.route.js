@@ -1,5 +1,5 @@
 import express from 'express'
-import { addNewBlog, getAllBlog, singleBlog } from '../controllers/post.controller.js';
+import { addNewBlog, getAllBlog, singleBlog, publicBlogs } from '../controllers/post.controller.js';
 import multer from "multer"
 import checkIsUserAuthenticated from '../middleware/auth.middleware.js';
 
@@ -17,8 +17,11 @@ const upload = multer({storage: storage})
 
 const router = express.Router();
 
-// protected routes
+// public routes 
+router.get("/public", publicBlogs)
 
+
+// protected routes
 router.get("/all", checkIsUserAuthenticated, getAllBlog)
 router.post("/add", checkIsUserAuthenticated, upload.single("thumbnail"),addNewBlog)
 router.get("/:id",checkIsUserAuthenticated, singleBlog)

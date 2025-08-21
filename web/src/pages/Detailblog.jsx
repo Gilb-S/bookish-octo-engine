@@ -53,7 +53,7 @@ const DetailBlog = () => {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Back Button */}
         <Link
-          to="/"
+          to="/home"
           className="inline-block mb-6 text-blue-600 dark:text-blue-400 hover:underline"
         >
           ← Back to Blogs

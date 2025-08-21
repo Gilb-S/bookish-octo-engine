@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import toast from 'react-hot-toast'
 import { useNavigate } from "react-router";
 const AddCategory = () => {
   const navigate = useNavigate();
@@ -23,10 +24,10 @@ const AddCategory = () => {
           },
         }
       );
-      alert(res.data.message);
-      navigate("/");
+      toast.success(res.data.message);
+      navigate("/home");
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -56,7 +57,7 @@ const AddCategory = () => {
                 setInput({ ...input, [e.target.name]: e.target.value })
               }
               placeholder="Enter category title"
-              required
+             
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

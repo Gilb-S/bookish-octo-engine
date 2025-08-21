@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { Moon, Sun, User } from "lucide-react";
-
+import toast from 'react-hot-toast'
 const Header = () => {
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [theme, setTheme] = useState("light");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -39,8 +40,8 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: "Add blog", path: "/add-blog" },
-    { name: "Add category", path: "/add-category" },
+    { name: "Add blog", path: "/home/add-blog" },
+    { name: "Add category", path: "/home/add-category" },
   ];
 
   return (
@@ -48,7 +49,7 @@ const Header = () => {
       <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link
-          to="/"
+          to={token ? "/home" : ""}
           className="text-2xl font-bold text-blue-600 dark:text-blue-400"
         >
           Blog-octo-Express
@@ -92,8 +93,10 @@ const Header = () => {
                       onClick={() => {
                         localStorage.removeItem("token");
                         localStorage.removeItem("username");
-                        alert("user log-out success");
-                        window.location.href = "/"; // redirect
+                        // alert("user log-out success");
+                        toast.success("User logged out")
+                        // window.location.href = "/"; // redirect
+                        navigate("/")
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >

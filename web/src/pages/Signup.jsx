@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import toast from 'react-hot-toast'
 const Signup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -23,7 +24,8 @@ const Signup = () => {
         formData,
         { withCredentials: true }
       );
-      alert(res.data.message);
+      // alert(res.data.message);
+      toast.success(res.data.message);
       navigate("/login")
     } catch (error) {
       alert(error.response.data.message);
